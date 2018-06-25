@@ -1,0 +1,65 @@
+
+//-------------------  exercise #1
+function getDiffInFullYear(obj) {
+  return Math.floor((Date.now() - +obj) / (1000*3600*24*365));
+}
+
+console.log('This is ' + getDiffInFullYear(new Date(1990, 10, 5)) + ' full years');
+
+//-------------------  exercise #2
+function Square(width, height) {
+  this.getArea = function() {
+    return width * height;
+  }
+}
+
+//-------------------  exercise #3
+function Circle(r) {
+  Square.call(this);
+  this.getArea = function() {
+    return Math.PI*Math.pow(r,2);
+  }
+}
+
+//-------------------  exercise #4-5
+function Area() {
+  this._figures = [];
+
+  this.addFigure = function(figure) {
+    var temp = this._figures.push(figure);
+    console.log('Figures array: ');
+    console.log(this._figures);
+    return this._figures;
+  }
+  this.clear = function() {
+    this._figures.length = 0;
+    console.log('Figures array after clear: ');
+    console.log(this._figures);
+    return this._figures;
+  }
+
+Object.defineProperty(this, "size", {
+  get: function() {
+    return this._figures.reduce(function(sum,current) {
+      return sum + current.getArea();
+    }, 0);
+  }
+
+});
+
+}
+
+// ---------------------------------------- results
+var square = new Square(20,30)
+console.log('Square area is: ' + square.getArea());
+
+var circle = new Circle(5);
+console.log('Circle area is: ' + circle.getArea());
+
+var area = new Area();
+
+area.addFigure(square);
+area.addFigure(circle);
+console.log('Total figures area is: ' + area.size);
+area.clear();
+console.log('Total figures area is: ' + area.size);

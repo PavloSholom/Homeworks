@@ -1,0 +1,69 @@
+use friends
+
+db.friends.insert([
+{
+name:"Ivan",
+age:22,
+hobby:["football","trips"],
+email:"ggg@ukr.net"
+},
+{
+name:"Bogdan",
+age:11,
+hobby:["football","chess","tenis"]
+},
+{
+name:"Vasyl",
+age:13,
+email: ""
+},
+{
+name:"David",
+age:19,
+hobby:["volleyball","computer games","music","trips"],
+email: null
+}
+])
+
+
+/***1***/    
+db.friends.find({$and:[{age:{$gte:15}},{age:{$lte:20}}]}).pretty()
+
+
+/***2***/    
+db.friends.find(
+	{$and:[
+		{$or:[{name:"Ivan"}, {name:"Bogdan"}, {name:"Vasyl"}]},
+		{$or:[{hobby:{$size:2}},{hobby:{$size:4}}]}
+	]}
+).pretty()
+
+
+/***3***/    
+//Варіант 1 - Javascript виконується повільніше ніж MongoDB-оператори
+db.friends.find(
+	{hobby:{$exists:true}, $where: "this.hobby.length>3"}
+).pretty()
+
+//Варіант 2 - В MongoDB 2.2+ тепер можна використовувати індекси масиву в ключах об'єктів запиту
+db.friends.find(
+	{"hobby.3":{$exists:true}}
+).pretty()
+
+
+/***4***/
+db.friends.find({email: {$regex: /@ukr.net/, $options: "si"}}).pretty()
+
+
+/***5***/
+db.friends.find(
+	{hobby:{$exists:false}}
+).pretty()
+
+
+/***6***/
+db.friends.find(
+	{$and:[
+	{email:null},{email:{$exists:true}}
+	]}
+).pretty()
